@@ -1,4 +1,14 @@
 package com.medilabo.patientService.dto;
 
-public record PatientModificationDTO() {
-}
+import jakarta.validation.constraints.Past;
+
+import java.time.LocalDate;
+
+public record PatientModificationDTO(
+        String firstName,
+        String lastName,
+        @Past LocalDate birthDate,
+        String genre,
+        String address,
+        String telephone
+) {}
