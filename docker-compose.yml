@@ -26,6 +26,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-patient:3306/patient_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootroot
+    ports:
+      - "8082:8082"
     networks:
       - medilabo-network
 
@@ -36,7 +38,18 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
     ports:
-      - "8082:8082"
+      - "8081:8081"
+    networks:
+      - medilabo-network
+
+  frontend-service:
+    build: ./frontend-service
+    container_name: frontend-service
+    restart: on-failure
+    environment:
+      GATEWAY_URL: http://gateway-service:8081
+    ports:
+      - "8080:8080"
     networks:
       - medilabo-network
 
