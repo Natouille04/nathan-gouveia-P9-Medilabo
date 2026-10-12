@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,8 @@
         :root {
             --primary-color: #2563eb;
             --primary-hover: #1d4ed8;
-            --danger-color: #ef4444;
-            --danger-hover: #dc2626;
+            --info-color: #44ef52;
+            --info-hover: #1ead25;
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
@@ -54,7 +55,8 @@
             font-size: 0.95rem;
         }
 
-        th, td {
+        th,
+        td {
             padding: 14px 16px;
             border-bottom: 1px solid var(--border-color);
         }
@@ -76,11 +78,18 @@
             background-color: #f8fafc;
         }
 
-        /* Styling pour les boutons d'action */
+        th:last-child,
+        td:last-child {
+            width: 1%;
+            white-space: nowrap;
+            text-align: right;
+        }
+
         .actions {
             display: flex;
             gap: 8px;
             align-items: center;
+            justify-content: flex-end;
         }
 
         .btn {
@@ -117,56 +126,51 @@
             color: #ffffff;
         }
 
-        .btn-delete {
-            background-color: #fef2f2;
-            color: var(--danger-color);
-            border: 1px solid #fecaca;
+        .btn-details {
+            background-color: #f4fef2;
+            color: var(--info-color);
+            border: 1px solid #cafeca;
         }
 
-        .btn-delete:hover {
-            background-color: var(--danger-color);
+        .btn-details:hover {
+            background-color: var(--info-color);
             color: #ffffff;
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Registre des Patients</h2>
+    <div class="container">
+        <h2>Registre des Patients</h2>
 
-    <a class="btn btn-create" href="/patients/new">Ajouter un nouveau patient</a>
+        <a class="btn btn-create" href="/patients/new">Ajouter un nouveau patient</a>
 
-    <div class="table-responsive">
-        <table>
-            <thead>
-            <tr>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Date de naissance</th>
-                <th>Genre</th>
-                <th>Adresse</th>
-                <th>Téléphone</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="patient : ${patients}">
-                <td th:text="${patient.firstName}">Prénom</td>
-                <td th:text="${patient.lastName}">Nom</td>
-                <td th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy')}">01/01/2000</td>
-                <td th:text="${patient.genre}">Genre</td>
-                <td th:text="${patient.address}">Adresse</td>
-                <td th:text="${patient.telephone}">Téléphone</td>
-                <td>
-                    <div class="actions">
-                        <a th:href="@{/patients/edit/{id}(id=${patient.id})}" class="btn btn-edit">Modifier</a>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="patient : ${patients}">
+                        <td th:text="${patient.firstName}">Prénom</td>
+                        <td th:text="${patient.lastName}">Nom</td>
+                        <td>
+                            <div class="actions">
+                                <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-details">Details</a>
+                                <a th:href="@{/patients/edit/{id}(id=${patient.id})}" class="btn btn-edit">Modifier</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>

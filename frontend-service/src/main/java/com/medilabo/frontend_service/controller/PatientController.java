@@ -19,10 +19,14 @@ public class PatientController {
 
     @GetMapping("/patients")
     public String patientsListPage(Model model) {
-        System.out.println("Liste de patient");
-
         model.addAttribute("patients", patientService.getAllPatients());
         return "patientsList";
+    }
+
+    @GetMapping("/patients/{id}")
+    public String patientDetailsPage(@PathVariable int id, Model model) {
+        model.addAttribute("patient", patientService.getPatientById(id));
+        return "patientDetails";
     }
 
     @GetMapping("/patients/new")

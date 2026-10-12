@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du patient</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 24px 28px 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .infos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 32px;
+            margin: 0 0 28px;
+        }
+
+        .info {
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info.wide {
+            grid-column: 1 / -1;
+        }
+
+        .info dt {
+            margin: 0 0 4px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .info dd {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .empty {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background-color: #eff6ff;
+            color: var(--primary-color);
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-edit:hover {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .btn-back {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-back:hover {
+            background-color: var(--border-color);
+            color: var(--text-main);
+        }
+
+        @media (max-width: 520px) {
+            .infos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>
+        <span th:text="${patient.firstName}">Prénom</span>
+        <span th:text="${patient.lastName}">Nom</span>
+    </h2>
+
+    <dl class="infos">
+        <div class="info">
+            <dt>Prénom</dt>
+            <dd th:text="${patient.firstName}">Prénom</dd>
+        </div>
+
+        <div class="info">
+            <dt>Nom</dt>
+            <dd th:text="${patient.lastName}">Nom</dd>
+        </div>
+
+        <div class="info">
+            <dt>Date de naissance</dt>
+            <dd th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy')}">31/12/1966</dd>
+        </div>
+
+        <div class="info">
+            <dt>Genre</dt>
+            <dd th:text="${patient.genre == 'M' ? 'Homme' : (patient.genre == 'F' ? 'Femme' : patient.genre)}">Genre</dd>
+        </div>
+
+        <div class="info wide">
+            <dt>Adresse</dt>
+            <dd th:if="${!#strings.isEmpty(patient.address)}" th:text="${patient.address}">1 Brookside St</dd>
+            <dd th:if="${#strings.isEmpty(patient.address)}" class="empty">Non renseignée</dd>
+        </div>
+
+        <div class="info wide">
+            <dt>Téléphone</dt>
+            <dd th:if="${!#strings.isEmpty(patient.telephone)}" th:text="${patient.telephone}">100-222-3333</dd>
+            <dd th:if="${#strings.isEmpty(patient.telephone)}" class="empty">Non renseigné</dd>
+        </div>
+    </dl>
+
+    <div class="actions">
+        <a class="btn btn-back" th:href="@{/patients}">Retour à la liste</a>
+        <a class="btn btn-edit" th:href="@{/patients/edit/{id}(id=${patient.id})}">Modifier</a>
+    </div>
+</div>
+
+</body>
+</html>
