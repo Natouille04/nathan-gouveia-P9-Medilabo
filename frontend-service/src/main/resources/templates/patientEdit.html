@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modifier un patient</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --ink: #1e293b;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --field-border: #cbd5e1;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --error-bg: #fef2f2;
+            --error-ink: #b91c1c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .card {
+            max-width: 640px;
+            margin: 24px auto;
+            padding: 24px 28px 28px;
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+        }
+
+        h1 {
+            margin: 0 0 20px;
+            padding-bottom: 12px;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--line);
+        }
+
+        .error {
+            margin: 0 0 16px;
+            padding: 10px 14px;
+            background: var(--error-bg);
+            color: var(--error-ink);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .optional { font-weight: 400; }
+
+        input, select {
+            width: 100%;
+            padding: 9px 11px;
+            font: inherit;
+            color: var(--ink);
+            background: #fff;
+            border: 1px solid var(--field-border);
+            border-radius: 6px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 1px;
+            border-color: var(--primary);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        button {
+            padding: 9px 18px;
+            font: inherit;
+            font-weight: 600;
+            color: #fff;
+            background: var(--primary);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover { background: var(--primary-dark); }
+
+        .cancel {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .cancel:hover { text-decoration: underline; }
+
+        @media (max-width: 520px) {
+            .row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Modifier un patient</h1>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/patients/edit/{id}(id=${patientId})}" method="post">
+        <div class="row">
+            <div class="field">
+                <label for="firstName">Prénom</label>
+                <input id="firstName" type="text" name="firstName" placeholder="John"
+                       th:value="${patientInfo?.firstName}" required>
+            </div>
+            <div class="field">
+                <label for="lastName">Nom</label>
+                <input id="lastName" type="text" name="lastName" placeholder="Doe"
+                       th:value="${patientInfo?.lastName}" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label for="birthDate">Date de naissance</label>
+                <input id="birthDate" type="date" name="birthDate"
+                       th:value="${patientInfo?.birthDate}" required>
+            </div>
+            <div class="field">
+                <label for="genre">Genre</label>
+                <select id="genre" name="genre" required>
+                    <option value="M" th:selected="${patientInfo?.genre == 'M'}">Homme</option>
+                    <option value="F" th:selected="${patientInfo?.genre == 'F'}">Femme</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="address">Adresse <span class="optional">(facultatif)</span></label>
+            <input id="address" type="text" name="address"
+                   th:value="${patientInfo?.address}">
+        </div>
+
+        <div class="field">
+            <label for="telephone">Téléphone <span class="optional">(facultatif)</span></label>
+            <input id="telephone" type="tel" name="telephone"
+                   th:value="${patientInfo?.telephone}">
+        </div>
+
+        <div class="actions">
+            <button type="submit">Enregistrer les modifications</button>
+            <a class="cancel" th:href="@{/patients}">Annuler</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

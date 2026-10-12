@@ -23,7 +23,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<PatientInfoDTO>> getAllPatient() {
         return ResponseEntity.status(HttpStatus.OK).body(patientService.findAll());
     }
@@ -43,22 +43,7 @@ public class PatientController {
         }
     }
 
-    @GetMapping("/{lastName}/{firstName}")
-    public ResponseEntity<PatientInfoDTO> getPatientByNames(@PathVariable String lastName, @PathVariable String firstName) {
-        if (lastName.isBlank() || firstName.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le nom et le prénom sont obligatoires");
-        }
-
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(patientService.findByNames(firstName, lastName));
-        }
-
-        catch (PatientNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
-    }
-
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Void> createPatient(@RequestBody @Valid PatientInfoDTO patientInfo) {
         try {
             patientService.createPatient(patientInfo);
@@ -77,14 +62,14 @@ public class PatientController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePatient(
             @PathVariable Long id,
-            @RequestBody @Valid PatientModificationDTO pateintUpdatedInfo
+            @RequestBody @Valid PatientModificationDTO patientUpdatedInfo
     ) {
         if(id <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'id du patient est invalide");
         }
 
         try {
-            patientService.editPatient(id, pateintUpdatedInfo);
+            patientService.editPatient(id, patientUpdatedInfo);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 

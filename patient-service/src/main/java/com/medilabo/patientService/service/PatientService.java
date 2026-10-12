@@ -25,6 +25,7 @@ public class PatientService {
 
         patientRepository.findAll().forEach(p ->
               result.add(new PatientInfoDTO(
+                      p.getId(),
                       p.getFirstName(),
                       p.getLastName(),
                       p.getBirthDate(),
@@ -42,20 +43,7 @@ public class PatientService {
                 .orElseThrow(() -> new PatientNotFoundException("The provided ID does not correspond to any patient in database"));
 
         return new PatientInfoDTO(
-                patient.getFirstName(),
-                patient.getLastName(),
-                patient.getBirthDate(),
-                patient.getGenre(),
-                patient.getAddress(),
-                patient.getTelephone()
-        );
-    }
-
-    public PatientInfoDTO findByNames(String firstName, String lastName) {
-        Patient patient = patientRepository.findByFirstNameAndLastName(firstName, lastName)
-                .orElseThrow(() -> new PatientNotFoundException("The provided ID does not correspond to any patient in database"));
-
-        return new PatientInfoDTO(
+                patient.getId(),
                 patient.getFirstName(),
                 patient.getLastName(),
                 patient.getBirthDate(),

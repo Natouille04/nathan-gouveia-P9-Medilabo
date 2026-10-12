@@ -5,6 +5,6 @@ spring:
         webflux:
           routes:
             - id: patient-service
-              uri: http://patient-service:8081
+              uri: http://patient-service:8082
               predicates:
                 - Path=/patient/**

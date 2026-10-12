@@ -26,8 +26,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-patient:3306/patient_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootroot
-    ports:
-      - "8082:8082"
     networks:
       - medilabo-network
 
