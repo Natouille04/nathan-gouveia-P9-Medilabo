@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,6 +76,54 @@
             font-style: italic;
         }
 
+        /* Styles pour la section des notes */
+        .notes-section {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .notes-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .note-card {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+
+        .note-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .note-content {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
         .actions {
             display: flex;
             gap: 8px;
@@ -114,6 +163,16 @@
             color: var(--text-main);
         }
 
+        .btn-add {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-add:hover {
+            background-color: #1d4ed8;
+        }
+
         @media (max-width: 520px) {
             .infos {
                 grid-template-columns: 1fr;
@@ -121,53 +180,77 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>
-        <span th:text="${patient.firstName}">Prénom</span>
-        <span th:text="${patient.lastName}">Nom</span>
-    </h2>
+    <div class="container">
+        <h2>
+            <span th:text="${patient.firstName}">Prénom</span>
+            <span th:text="${patient.lastName}">Nom</span>
+        </h2>
 
-    <dl class="infos">
-        <div class="info">
-            <dt>Prénom</dt>
-            <dd th:text="${patient.firstName}">Prénom</dd>
+        <dl class="infos">
+            <div class="info">
+                <dt>Prénom</dt>
+                <dd th:text="${patient.firstName}">Prénom</dd>
+            </div>
+
+            <div class="info">
+                <dt>Nom</dt>
+                <dd th:text="${patient.lastName}">Nom</dd>
+            </div>
+
+            <div class="info">
+                <dt>Date de naissance</dt>
+                <dd th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy')}">31/12/1966</dd>
+            </div>
+
+            <div class="info">
+                <dt>Genre</dt>
+                <dd th:text="${patient.genre == 'M' ? 'Homme' : (patient.genre == 'F' ? 'Femme' : patient.genre)}">Genre
+                </dd>
+            </div>
+
+            <div class="info wide">
+                <dt>Adresse</dt>
+                <dd th:if="${!#strings.isEmpty(patient.address)}" th:text="${patient.address}">1 Brookside St</dd>
+                <dd th:if="${#strings.isEmpty(patient.address)}" class="empty">Non renseignée</dd>
+            </div>
+
+            <div class="info wide">
+                <dt>Téléphone</dt>
+                <dd th:if="${!#strings.isEmpty(patient.telephone)}" th:text="${patient.telephone}">100-222-3333</dd>
+                <dd th:if="${#strings.isEmpty(patient.telephone)}" class="empty">Non renseigné</dd>
+            </div>
+        </dl>
+
+        <!-- SECTION DES NOTES DU PATIENT -->
+        <div class="notes-section">
+            <div class="notes-header">
+                <h3>Notes médicales</h3>
+                <a class="btn btn-add" th:href="@{/notes/add(patientId=${patient.id})}">+ Ajouter une note</a>
+            </div>
+
+            <!-- Liste des notes s'il y en a -->
+            <div class="notes-list" th:if="${notes != null and !#lists.isEmpty(notes)}">
+                <div class="note-card" th:each="noteItem : ${notes}">
+                    <!-- Affichage du contenu de la note -->
+                    <p class="note-content" th:text="${noteItem.note}">Contenu de la note...</p>
+                </div>
+            </div>
+
+            <!-- Message s'il n'y a aucune note -->
+            <div th:if="${notes == null or #lists.isEmpty(notes)}" class="empty" style="margin-bottom: 24px;">
+                Aucune note renseignée pour ce patient.
+            </div>
         </div>
 
-        <div class="info">
-            <dt>Nom</dt>
-            <dd th:text="${patient.lastName}">Nom</dd>
+        <div class="actions">
+            <a class="btn btn-back" th:href="@{/patients}">Retour à la liste</a>
+            <a class="btn btn-edit" th:href="@{/patients/edit/{id}(id=${patient.id})}">Modifier</a>
         </div>
-
-        <div class="info">
-            <dt>Date de naissance</dt>
-            <dd th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy')}">31/12/1966</dd>
-        </div>
-
-        <div class="info">
-            <dt>Genre</dt>
-            <dd th:text="${patient.genre == 'M' ? 'Homme' : (patient.genre == 'F' ? 'Femme' : patient.genre)}">Genre</dd>
-        </div>
-
-        <div class="info wide">
-            <dt>Adresse</dt>
-            <dd th:if="${!#strings.isEmpty(patient.address)}" th:text="${patient.address}">1 Brookside St</dd>
-            <dd th:if="${#strings.isEmpty(patient.address)}" class="empty">Non renseignée</dd>
-        </div>
-
-        <div class="info wide">
-            <dt>Téléphone</dt>
-            <dd th:if="${!#strings.isEmpty(patient.telephone)}" th:text="${patient.telephone}">100-222-3333</dd>
-            <dd th:if="${#strings.isEmpty(patient.telephone)}" class="empty">Non renseigné</dd>
-        </div>
-    </dl>
-
-    <div class="actions">
-        <a class="btn btn-back" th:href="@{/patients}">Retour à la liste</a>
-        <a class="btn btn-edit" th:href="@{/patients/edit/{id}(id=${patient.id})}">Modifier</a>
     </div>
-</div>
 
 </body>
+
 </html>
