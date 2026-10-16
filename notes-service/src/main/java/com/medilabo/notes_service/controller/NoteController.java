@@ -32,7 +32,7 @@ public class NoteController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> postMethodName(@RequestBody NoteCreationDTO dto) {
+    public ResponseEntity<Void> createNote(@RequestBody NoteCreationDTO dto) {
         noteService.createNote(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
