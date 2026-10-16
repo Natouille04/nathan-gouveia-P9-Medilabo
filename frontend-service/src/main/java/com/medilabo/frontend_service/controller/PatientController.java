@@ -5,6 +5,8 @@ import com.medilabo.frontend_service.dto.PatientDataDTO;
 import com.medilabo.frontend_service.dto.PatientEditDTO;
 import com.medilabo.frontend_service.service.NoteService;
 import com.medilabo.frontend_service.service.PatientService;
+import com.medilabo.frontend_service.service.RiskService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +15,13 @@ import org.springframework.web.client.HttpClientErrorException;
 @Controller
 public class PatientController {
     private final NoteService noteService;
-    private PatientService patientService;
+    private final PatientService patientService;
+    private final RiskService riskService;
 
-    public PatientController(PatientService patientService, NoteService noteService) {
+    public PatientController(PatientService patientService, NoteService noteService, RiskService riskService) {
         this.patientService = patientService;
         this.noteService = noteService;
+        this.riskService = riskService;
     }
 
     @GetMapping("/patients")
@@ -30,6 +34,7 @@ public class PatientController {
     public String patientDetailsPage(@PathVariable int id, Model model) {
         model.addAttribute("patient", patientService.getPatientById(id));
         model.addAttribute("notes", noteService.getNoteByPatId(id));
+        model.addAttribute("risk", riskService.getRiskByPatId(id));
         return "patientDetails";
     }
 

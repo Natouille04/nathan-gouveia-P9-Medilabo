@@ -32,15 +32,6 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
         }
 
-        h2 {
-            margin-top: 0;
-            margin-bottom: 24px;
-            font-size: 1.5rem;
-            color: var(--text-main);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 12px;
-        }
-
         .infos {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -74,13 +65,6 @@
         .empty {
             color: var(--text-muted);
             font-style: italic;
-        }
-
-        /* Styles pour la section des notes */
-        .notes-section {
-            margin-top: 32px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-color);
         }
 
         .notes-header {
@@ -173,6 +157,63 @@
             background-color: #1d4ed8;
         }
 
+        .name-container {
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .name-container * {
+            margin: 0;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .risk-none {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        .risk-borderline {
+            background-color: #fef9c3;
+            color: #854d0e;
+            border-color: #fde68a;
+        }
+
+        .risk-danger {
+            background-color: #ffedd5;
+            color: #9a3412;
+            border-color: #fed7aa;
+        }
+
+        .risk-early {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fecaca;
+        }
+
+        .risk-unknown {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            border-color: var(--border-color);
+        }
+
         @media (max-width: 520px) {
             .infos {
                 grid-template-columns: 1fr;
@@ -184,10 +225,22 @@
 <body>
 
     <div class="container">
-        <h2>
-            <span th:text="${patient.firstName}">Prénom</span>
-            <span th:text="${patient.lastName}">Nom</span>
-        </h2>
+        <div class="name-container">
+            <h2>
+                <span th:text="${patient.firstName}">Prénom</span>
+                <span th:text="${patient.lastName}">Nom</span>
+            </h2>
+
+            <div th:if="${risk != null}" th:switch="${risk.risk}">
+                <span th:case="'None'" class="risk-badge risk-none">Aucun risque</span>
+                <span th:case="'Borderline'" class="risk-badge risk-borderline">Risque limité</span>
+                <span th:case="'InDanger'" class="risk-badge risk-danger">En danger</span>
+                <span th:case="'EarlyOnset'" class="risk-badge risk-early">Apparition précoce</span>
+                <span th:case="*" class="risk-badge risk-unknown" th:text="${risk.risk}">Inconnu</span>
+            </div>
+
+            <span th:if="${risk == null}" class="risk-badge risk-unknown">Risque indisponible</span>
+        </div>
 
         <dl class="infos">
             <div class="info">
